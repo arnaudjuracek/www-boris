@@ -1,0 +1,30 @@
+{
+  "name": "www-boris",
+  "description": "Outil de visualisation des pratiques, des discours, des liens et des positionnements des acteurs",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "browserify src/index.js > src/bundle.js",
+    "start": "budo src/index.js:bundle.js -P -l -wg '**/*.{html, css, js}' -d src",
+    "deploy": "npm run build && ghp src"
+  },
+  "main": "src/index.js",
+  "author": "Arnaud Juracek <arnaud.juracek@gmail.com> (http://arnaudjuracek.fr)",
+  "license": "MIT",
+  "directories": {},
+  "dependencies": {
+    "kool-shell": "github:pqml/kool-shell"
+  },
+  "devDependencies": {
+    "browserify": "^13.1.1",
+    "budo": "^9.2.2",
+    "fs-extra": "^1.0.0",
+    "uglify-js": "^2.7.5"
+  },
+  "browserify": {
+    "transform": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "null"
+  }
+}
