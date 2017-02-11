@@ -3,12 +3,29 @@
   stroke-width: 3px;
 }
 
-.node text {
-  // pointer-events: none;
+.link.direct {
+  stroke: red;
+}
+
+.link.indirect {
+  stroke-dasharray: 5;
+}
+
+.link.misc {
+  stroke-dasharray: 10;
+}
+
+.node {
   cursor: move;
+}
+
+.node circle {}
+.node:hover circle {
+  fill: red;
+}
+
+.node text {
   font: 10px sans-serif;
-  fill: #FFF;
-  background: yellow;
 }
 
 .easing {
