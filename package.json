@@ -13,12 +13,14 @@
   "directories": {},
   "dependencies": {
     "d3": "^4.5.0",
-    "sheetrock": "^1.1.4"
+    "sheetrock": "^1.1.4",
+    "tiny-emitter": "^1.1.0"
   },
   "devDependencies": {
     "browserify": "^13.1.1",
     "budo": "^9.2.2",
     "fs-extra": "^1.0.0",
+    "standard": "^8.6.0",
     "uglify-js": "^2.7.5"
   },
   "browserify": {
