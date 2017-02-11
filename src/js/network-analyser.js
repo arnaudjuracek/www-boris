@@ -18,6 +18,13 @@ function NetworkAnalyser (nodes, opts) {
     get nodes () { return nodes },
     get links () {
       return links = links || analyseLinks(nodes)
+    },
+
+    parseHtml : function (node) {
+      return `
+        <h1>#${node.index} - ${node.title}</h1>
+        <div class="content">${node.content}</div>
+      `
     }
   }
 

@@ -51,7 +51,7 @@ function GSheet (opts) {
           direct: cells[5].replace(/^\s+|\s+$/g, '').split(opts.delimiter),
           indirect: cells[6].replace(/^\s+|\s+$/g, '').split(opts.delimiter),
           misc: cells[7].replace(/^\s+|\s+$/g, '').split(opts.delimiter)
-        }
+        },
       })
     }
     return nodes

@@ -1,19 +1,21 @@
 'use strict'
 
-var d3 = require('d3')
+var d3      = require('d3')
 var Emitter = require('tiny-emitter')
+var collide = require('./force-collide.js')
 
 var defaultOpts = {
   width: window.innerWidth,
   height: window.innerHeight,
-  scale: [0.1, 8]
+  scale: [0.1, 8],
+  nodeWidth: 300
 }
 
 function Network (analyser, opts) {
   var emitter = new Emitter()
   opts = Object.assign({}, defaultOpts, opts || {})
 
-  var svg = d3.select('body').append('svg')
+  var svg = d3.select('main').append('svg')
                                 .attr('width', opts.width)
                                 .attr('height', opts.height)
 
@@ -26,14 +28,11 @@ function Network (analyser, opts) {
 
       link = {}
       Object.keys(analyser.links).forEach(function (key) {
-        console.log(key, analyser.links[key])
         link[key] = g.selectAll()
           .data(analyser.links[key])
           .enter().append('line')
           .attr('class', `link ${key} easing`)
       })
-
-      api.startSimulation(analyser.nodes)
 
       node = g.selectAll()
         .data(analyser.nodes)
@@ -41,26 +40,44 @@ function Network (analyser, opts) {
         .attr('class', 'node easing')
         .call(d3.drag().on('drag', dragHandler))
 
-      node.append('circle')
-        .attr('r', 10)
-        .attr('x', 0)
-        .attr('y', 0)
+      // node.append('rect')
+      //   .attr('fill', 'none')
+      //   .attr('stroke', 'black')
+      //   .attr('width', opts.nodeWidth)
+      //   .attr('height', opts.nodeWidth)
 
-      node.append('text')
-        .attr('dx', 0)
-        .attr('dy', '.35em')
-        .text(function (d) { return d.title })
+      node.append('foreignObject')
+        .attr('width', opts.nodeWidth)
+        .append("xhtml:body")
+        .html(function (d) { return analyser.parseHtml(d) })
+      node.selectAll('foreignObject').attr('height', function (d) {
+        return this.getElementsByTagName('body')[0].clientHeight;
+      })
+
+      node.append('circle')
+        .attr('cx', opts.nodeWidth / 2)
+        .attr('r', 10)
 
       node.on('mouseover', hoverHandler)
       node.on('mouseout', outHandler)
+
+      api.startSimulation(analyser.nodes)
     },
 
     startSimulation: function (nodes) {
       simulation = d3.forceSimulation(nodes)
+        .force('collision', collide().size(function (d) {
+          return [
+            opts.nodeWidth,
+            Math.max(
+                     opts.nodeWidth,
+                     node.selectAll('foreignObject')._groups[d.index][0].getAttribute('height')
+                     ),
+          ]
+        }))
         .force('link-direct', d3.forceLink().strength(1))
         .force('link-indirect', d3.forceLink().strength(1))
         .force('link-misc', d3.forceLink().strength(1))
-        .force('collision', d3.forceCollide(30))
         .force('centering', d3.forceCenter(opts.width / 2, opts.height / 2))
         .on('tick', tickHandler)
 
@@ -73,9 +90,9 @@ function Network (analyser, opts) {
   function tickHandler () {
     Object.keys(link).forEach(function (key) {
       link[key]
-        .attr('x1', function (d) { return d.source.x })
+        .attr('x1', function (d) { return d.source.x + opts.nodeWidth / 2 })
         .attr('y1', function (d) { return d.source.y })
-        .attr('x2', function (d) { return d.target.x })
+        .attr('x2', function (d) { return d.target.x + opts.nodeWidth / 2 })
         .attr('y2', function (d) { return d.target.y })
     })
 
@@ -96,16 +113,20 @@ function Network (analyser, opts) {
   }
 
   function hoverHandler (d) {
-    link.direct.style('stroke', function (l) {
-      if (d === l.source) {
-        node.filter(function (n, i) { return i === l.target.index }).style('fill', 'red')
-        return '#F00'
-      }
+    Object.keys(link).forEach(function (key) {
+      link[key].style('stroke', function (l) {
+        if (d === l.source) {
+          node.filter(function (n, i) { return i === l.target.index }).style('fill', 'red')
+          return '#F00'
+        }
+      })
     })
   }
 
   function outHandler (d) {
-    link.direct.style('stroke', null)
+    Object.keys(link).forEach(function (key) {
+      link[key].style('stroke', null)
+    })
     node.style('fill', null)
   }
 
