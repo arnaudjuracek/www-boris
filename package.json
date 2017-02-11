@@ -5,7 +5,7 @@
   "scripts": {
     "build": "browserify src/index.js > src/bundle.js",
     "start": "budo src/index.js:bundle.js -P -l -wg '**/*.{html, css, js}' -d src",
-    "deploy": "npm run build && ghp src"
+    "deploy": "npm run build && ghp src",
   },
   "main": "src/index.js",
   "author": "Arnaud Juracek <arnaud.juracek@gmail.com> (http://arnaudjuracek.fr)",
@@ -20,7 +20,6 @@
     "browserify": "^13.1.1",
     "budo": "^9.2.2",
     "fs-extra": "^1.0.0",
-    "standard": "^8.6.0",
     "uglify-js": "^2.7.5"
   },
   "browserify": {
