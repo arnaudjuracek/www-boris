@@ -10,8 +10,6 @@ function Network (nodes, opts) {
   opts = Object.assign({}, defaultOpts, opts || {})
   var emitter = new Emitter()
 
-  var tags
-
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i]
     Object.keys(node.links).forEach(function (key) {
@@ -25,8 +23,9 @@ function Network (nodes, opts) {
     update: function () {},
 
     get nodes () { return nodes },
-    get links () { return links = links || analyseLinks(nodes) },
-    get tags () { return tags = tags || analyseTags(nodes) },
+    get links () { return analyseLinks(nodes) },
+    get tags () { return analyseTags(nodes) },
+    get timeRange () { return analyseTimeline(nodes) },
 
     parseHtml : function (node) {
       return `
@@ -44,10 +43,7 @@ function Network (nodes, opts) {
         if (filter(node)) subset.push(node)
       }
 
-      return {
-        nodes: subset,
-        links: analyseLinks(nodes)
-      }
+      return subset
     }
   }
 
@@ -62,6 +58,25 @@ function Network (nodes, opts) {
     }
 
     return arrayUnique(tags)
+  }
+
+  function analyseTimeline (nodes) {
+    var min = Number.POSITIVE_INFINITY
+    var max = Number.NEGATIVE_INFINITY
+
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i]
+      var begin = node.begin.raw
+      var end = node.end.raw
+
+      min = begin < min ? begin : min
+      max = end > max ? end : max
+    }
+
+    return {
+      min: min,
+      max: max,
+    }
   }
 
   function createLinks (node, linkType) {

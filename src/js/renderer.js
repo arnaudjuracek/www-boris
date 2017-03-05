@@ -75,7 +75,7 @@ function Renderer (graph, opts) {
     nodeEnter.append('svg:text')
       .attr('x', 10)
       .text(function (d) {
-        return d.id
+        return `${d.id} - ${d.raw.title}`
       })
 
     node.on('mouseover', hoverHandler)
@@ -90,7 +90,9 @@ function Renderer (graph, opts) {
       .attr('id', function (d) {
         return d.source.id + '-' + d.target.id
       })
-      .attr('class', `link direct easing`)
+      .attr('class', function (d) {
+        return `link ${d.type} easing`
+      })
 
     link.exit().remove()
   }

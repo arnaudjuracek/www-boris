@@ -40,8 +40,14 @@ function GSheet (opts) {
       var cells = rows[i].cellsArray
       nodes.push({
         id: i,
-        begin: new Date(cells[0]),
-        end: new Date(cells[1]),
+        begin: {
+          date: new Date(cells[0]),
+          raw: new Date(cells[0]).getTime()
+        },
+        end: {
+          date: new Date(cells[1]),
+          raw: new Date(cells[1]).getTime(),
+        },
         title: cells[2],
         category: cells[3],
         content: cells[4],

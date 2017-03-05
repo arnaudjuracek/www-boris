@@ -3,8 +3,6 @@
 var d3      = require('d3')
 var Emitter = require('tiny-emitter')
 
-// var collide = require('./force-collide.js')
-
 var defaultOpts = {
   width: window.innerWidth,
   height: window.innerHeight,
@@ -18,7 +16,7 @@ function Force (opts) {
 
 
   var simulation = d3.forceSimulation()
-      .force('link', d3.forceLink().distance(function (d) { return d.value }))
+      .force('link', d3.forceLink())
       .force('centering', d3.forceCenter(opts.width / 2, opts.height / 2))
       .on('tick', function () {
         emitter.emit('tick')
@@ -37,7 +35,13 @@ function Force (opts) {
 
     update : function (nodes, links) {
       if (nodes) simulation.nodes(nodes)
-      if (links) simulation.force('link', d3.forceLink().links(links).distance(function (d) { return d.value }))
+      if (links) {
+        simulation.force('link', d3.forceLink()
+                                   .links(links)
+                                   .distance(function (d) { return d.value })
+                                   .id(function(d, i) { return d.raw.id })
+                                  )
+      }
       api.reheat()
     },
 

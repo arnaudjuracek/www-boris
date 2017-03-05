@@ -19,13 +19,38 @@ function Graph (opts) {
     get links () { return links },
     get force () { return force },
 
+    set : function (newNodes) {
+      var tmp = []
+      for (var i in newNodes) {
+        var node = newNodes[i]
+        tmp.push({
+          id : node.id,
+          raw : node
+        })
+      }
+
+      if (!areSame(tmp, nodes)) {
+        nodes = tmp
+        update()
+      }
+    },
+
     addNode : function (node) {
       nodes.push({
         id : node.id,
         raw : node
       })
+      update()
+    },
 
-      refreshLinks()
+    removeNodes : function () {
+      nodes = []
+      links = []
+      update()
+    },
+
+    removeNode : function (node) {
+      nodes.splice(findNodeIndex(node.id), 1);
       update()
     },
 
@@ -49,22 +74,37 @@ function Graph (opts) {
     links = []
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i].raw
-      var key = 'direct'
-      for (var j = 0; j < node.links[key].length; j++) {
-        var target = findNode(node.links[key][j].target)
-        if (target) {
-          links.push({
-            source : node.id,
-            target : target,
-            type   : key,
-            value  : (i+1) * 100
-          })
+
+      Object.keys(node.links).forEach(function (key) {
+        for (var j = 0; j < node.links[key].length; j++) {
+          var target = findNode(node.links[key][j].target)
+          if (target) {
+            links.push({
+              source : node.id,
+              target : target,
+              type   : key,
+              value  : (i+1) * 100
+            })
+          }
         }
-      }
+      })
+
     }
   }
 
+  function areSame (a, b) {
+    if (!a || !b) return false
+    if (a.length !== b.length) return false
+
+    for (var i = 0; i < a.length; i++) {
+      if (a[i].id !== b[i].id) return false
+    }
+
+    return true
+  }
+
   function update () {
+    refreshLinks()
     force.update(nodes, links)
     emitter.emit('update')
     emitter.emit('update')

@@ -13,6 +13,7 @@
   "directories": {},
   "dependencies": {
     "d3": "^4.5.0",
+    "nouislider": "^9.2.0",
     "sheetrock": "^1.1.4",
     "tiny-emitter": "^1.1.0"
   },
