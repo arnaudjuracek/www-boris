@@ -7,7 +7,11 @@ var defaultOpts = {
   width: window.innerWidth,
   height: window.innerHeight,
   scale: [0.1, 8],
-  nodeWidth: 300
+  distance: {
+    direct: 200,
+    indirect: 500,
+    misc: 500,
+  },
 }
 
 function Force (opts) {
@@ -38,7 +42,9 @@ function Force (opts) {
       if (links) {
         simulation.force('link', d3.forceLink()
                                    .links(links)
-                                   .distance(function (d) { return d.value })
+                                   .distance(function (d) {
+                                      return opts.distance[d.type]
+                                    })
                                    .id(function(d, i) { return d.raw.id })
                                   )
       }

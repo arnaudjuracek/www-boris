@@ -83,7 +83,6 @@ function Graph (opts) {
               source : node.id,
               target : target,
               type   : key,
-              value  : (i+1) * 100
             })
           }
         }
