@@ -32,12 +32,14 @@ function GSheet (opts) {
     }
   }
 
+  return api
+
   function parseRows (rows, offset) {
     var nodes = []
     for (var i = offset || 0; i < rows.length; i++) {
       var cells = rows[i].cellsArray
       nodes.push({
-        index: i,
+        id: i,
         begin: new Date(cells[0]),
         end: new Date(cells[1]),
         title: cells[2],
@@ -57,7 +59,6 @@ function GSheet (opts) {
     return nodes
   }
 
-  return api
 }
 
 module.exports = GSheet

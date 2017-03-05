@@ -1,21 +1,27 @@
 'use strict'
 
-var GSheet = require('./js/gsheet.js')
-var Network = require('./js/network.js')
-var NetworkAnalyser = require('./js/network-analyser.js')
+var GSheet   = require('./js/gsheet.js')
+var Network  = require('./js/network.js')
+var Graph    = require('./js/graph.js')
+var Renderer = require('./js/renderer.js')
+
 
 var gs = GSheet({})
-// gs.on('load', (data) => console.log(data))
 gs.on('error', (err) => console.error(err))
 
 gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
   if (!err) {
-    var analyser = NetworkAnalyser(gs.cells)
-    var network = Network(analyser)
+    var network  = Network(gs.cells)
+    var graph    = Graph()
+    var renderer = Renderer(graph)
 
-    // console.log(analyser.nodes)
-    // console.log(analyser.links)
+    var index = 0
+    window.document.addEventListener('click', function () {
+      if (index < network.nodes.length) {
+        var node = network.nodes[index++]
+        graph.addNode(node)
+      }
+    })
 
-    network.init()
   }
 })
