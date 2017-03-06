@@ -61,7 +61,7 @@ function Renderer (graph, opts) {
     node.exit().remove()
 
     var nodeEnter = node.enter().append('g')
-      .attr('class', 'node easing')
+      .attr('class', function (d) { return `node ${d.raw.pinned ? 'pinned' : ''} easing` })
       .call(
             d3.drag()
             .subject(dragsubject)
@@ -70,7 +70,7 @@ function Renderer (graph, opts) {
             .on('end', dragended))
 
     nodeEnter.append('svg:circle')
-      .attr('r', 10)
+      .attr('r', function (d) { return d.raw.pinned ? 30 : 10 })
 
     nodeEnter.append('svg:text')
       .attr('x', 10)
@@ -87,12 +87,8 @@ function Renderer (graph, opts) {
       })
 
     link.enter().append('line')
-      .attr('id', function (d) {
-        return d.source.id + '-' + d.target.id
-      })
-      .attr('class', function (d) {
-        return `link ${d.type} easing`
-      })
+      .attr('id', function (d) { return d.source.id + '-' + d.target.id })
+      .attr('class', function (d) { return `link ${d.type} easing` })
 
     link.exit().remove()
   }

@@ -38,15 +38,21 @@ function GSheet (opts) {
     var nodes = []
     for (var i = offset || 0; i < rows.length; i++) {
       var cells = rows[i].cellsArray
+      var dates = {
+        begin: new Date(cells[0]),
+        end: new Date(cells[1]),
+      }
+
       nodes.push({
         id: i,
+        pinned: isNaN(dates.begin.getTime()),
         begin: {
-          date: new Date(cells[0]),
-          raw: new Date(cells[0]).getTime()
+          date: dates.begin,
+          raw: dates.begin.getTime(),
         },
         end: {
-          date: new Date(cells[1]),
-          raw: new Date(cells[1]).getTime(),
+          date: dates.end,
+          raw: dates.end.getTime(),
         },
         title: cells[2],
         category: cells[3],

@@ -29,11 +29,30 @@ main {
 }
 .node:hover circle { fill: #da3131; }
 
-section.tools {
+.node.pinned circle {
+  fill: #da3131;
+}
+
+section.timeline {
   position: absolute;
   left: 50px;
   right: 50px;
   bottom: 50px;
+}
+
+section.filters {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+}
+
+section.filters ul {
+  list-style: none;
+}
+
+section.filters input:hover,
+section.filters label:hover {
+  cursor: pointer;
 }
 
 
