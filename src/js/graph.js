@@ -4,10 +4,15 @@ var d3      = require('d3')
 var Emitter = require('tiny-emitter')
 var Force   = require('./force.js')
 
-function Graph (opts) {
+var defaultOpts = {
+  width: window.innerWidth,
+  height: window.innerHeight,
+}
 
+function Graph (opts) {
+  opts = Object.assign({}, defaultOpts, opts || {})
   var emitter = new Emitter()
-  var force = Force()
+  var force = Force(opts)
 
   var nodes = force.nodes
   var links = force.links

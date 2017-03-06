@@ -4,6 +4,7 @@ var GSheet   = require('./js/gsheet.js')
 var Network  = require('./js/network.js')
 var Graph    = require('./js/graph.js')
 var Renderer = require('./js/renderer.js')
+var Sidebar  = require('./js/sidebar.js')
 
 var noUiSlider = require('nouislider')
 
@@ -13,15 +14,27 @@ gs.on('error', (err) => console.error(err))
 
 gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
   if (!err) {
+
+    var app = (function() {
+      var el = document.getElementById('app')
+      var rect = el.getBoundingClientRect()
+      return {
+        el,
+        rect,
+        width: rect.width,
+        height: rect.height,
+      }
+    })()
+
     var network  = Network(gs.cells)
-    var graph    = Graph()
-    var renderer = Renderer(graph)
+    var graph    = Graph({width: app.width, height: app.height})
+    var renderer = Renderer(graph, {width: app.width, height: app.height})
 
     var filter = {
       time: [0, 0],
       tags: [],
       exec: function(node) {
-        return (node.pinned || inTime(node, this.time)) && matchAnyTags(node, this.tags)
+        return node.pinned || (inTime(node, this.time) && matchAnyTags(node, this.tags))
 
         function inTime (node, range) {
           return node.begin.raw >= range[0] && node.begin.raw <= range[1]
@@ -37,9 +50,22 @@ gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
       }
     }
 
-
     createFilter(network, graph, filter)
     createSlider(network, graph, filter)
+
+    var sidebar = Sidebar({
+      el: document.getElementById('sidebar'),
+      container : document.getElementById('card')
+    })
+
+    sidebar.container.style.display = 'none'
+
+    renderer.on('mouseover', sidebar.update)
+
+    sidebar.on('update', function () {
+      sidebar.container.style.display = ''
+      sidebar.el.querySelector('article.welcome').style.display = 'none'
+    })
   }
 })
 
@@ -48,6 +74,18 @@ gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
 function createSlider (network, graph, filter) {
   var slider = document.getElementById('slider')
   var timeRange = network.timeRange
+
+  var pips = (function () {
+    var nodes = []
+    for (var i = 0; i < network.nodes.length; i++) {
+      var node = network.nodes[i]
+      if (!node.pinned) {
+        nodes.push(node.begin.raw)
+        // nodes.push(node.end.raw)
+      }
+    }
+    return nodes
+  })()
 
   noUiSlider.create(slider, {
     start: [timeRange.min, timeRange.max],
@@ -62,12 +100,22 @@ function createSlider (network, graph, filter) {
         var yyyy = d.getFullYear()
         var mm = ('0' + (d.getMonth()+1)).slice(-2)
         var dd = ('0' + d.getDate()).slice(-2)
-        return `${yyyy}-${mm}-${dd}`
+        return `${dd}/${mm}/${yyyy}`
       },
     },
     range: {
       'min': timeRange.min,
       'max': timeRange.max
+    },
+    pips: {
+      mode: 'values',
+      values: pips,
+      density: 4,
+      stepped: true,
+      format: {
+        from: function (v) { return '' },
+        to: function (v) { return '' }
+      }
     }
   })
 
@@ -76,6 +124,7 @@ function createSlider (network, graph, filter) {
     var sub = network.subset(filter.exec.bind(filter))
     graph.set(sub)
   })
+
 }
 
 function createFilter (network, graph, filter) {
@@ -100,9 +149,14 @@ function createFilter (network, graph, filter) {
       label.htmlFor = id
       label.appendChild(document.createTextNode(tag))
 
+      // <i class="fa fa-tags" title="valeur">
+      var fa = document.createElement('i')
+      fa.classList.add('fa', 'fa-tags')
+
       var li = document.createElement('li')
       li.appendChild(checkbox)
       li.appendChild(label)
+      li.appendChild(fa)
       tagsContainer.appendChild(li)
     }
   }

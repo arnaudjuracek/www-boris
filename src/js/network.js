@@ -27,13 +27,6 @@ function Network (nodes, opts) {
     get tags () { return analyseTags(nodes) },
     get timeRange () { return analyseTimeline(nodes) },
 
-    parseHtml : function (node) {
-      return `
-        <h1>#${node.id} - ${node.title}</h1>
-        <div class="content">${node.content}</div>
-      `
-    },
-
     subset : function (filter) {
       filter = filter || function (n) { return n }
 

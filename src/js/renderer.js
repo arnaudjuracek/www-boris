@@ -33,20 +33,6 @@ function Renderer (graph, opts) {
   graph.on('update', update)
   graph.force.on('tick', tickHandler)
 
-      // node.append('rect')
-      //   .attr('fill', 'none')
-      //   .attr('stroke', 'black')
-      //   .attr('width', opts.nodeWidth)
-      //   .attr('height', opts.nodeWidth)
-
-      // node.append('foreignObject')
-      //   .attr('width', opts.nodeWidth)
-      //   .append("xhtml:body")
-      //   .html(function (d) { return graph.parseHtml(d) })
-      // node.selectAll('foreignObject').attr('height', function (d) {
-      //   return this.getElementsByTagName('body')[0].clientHeight;
-      // })
-
   var api = {
     on : function (event, callback, context) { emitter.on(event, callback, context) },
     update : function () { update() },
@@ -70,16 +56,21 @@ function Renderer (graph, opts) {
             .on('end', dragended))
 
     nodeEnter.append('svg:circle')
-      .attr('r', function (d) { return d.raw.pinned ? 30 : 10 })
+      .attr('r', function (d) { return d.raw.pinned ? 20 : 10 })
+      .attr('class', 'easing')
+      .on('mouseover', hoverStart)
+      .on('mouseout', hoverEnd)
 
     nodeEnter.append('svg:text')
-      .attr('x', 10)
+      .attr('x', function (d) {
+        return d.raw.pinned ? 30 : 20
+      })
+      .attr('y', 5)
+      .attr('class', 'easing')
       .text(function (d) {
-        return `${d.id} - ${d.raw.title}`
+        return `${d.raw.title}`
       })
 
-    node.on('mouseover', hoverHandler)
-    node.on('mouseout', outHandler)
 
     link = linkContainer.selectAll('line')
       .data(graph.links, function (d) {
@@ -133,24 +124,8 @@ function Renderer (graph, opts) {
     d3.event.subject.fy = null;
   }
 
-  function hoverHandler (d) {
-    // console.log(d)
-    // Object.keys(link).forEach(function (key) {
-    //   link[key].style('stroke', function (l) {
-    //     if (d === l.source) {
-    //       node.filter(function (n, i) { return i === l.target.index }).style('fill', 'red')
-    //       return '#F00'
-    //     }
-    //   })
-    // })
-  }
-
-  function outHandler (d) {
-    // Object.keys(link).forEach(function (key) {
-    //   link[key].style('stroke', null)
-    // })
-    node.style('fill', null)
-  }
+  function hoverStart (d) { emitter.emit('mouseover', d.raw) }
+  function hoverEnd (d) { emitter.emit('mouseout') }
 
 }
 
