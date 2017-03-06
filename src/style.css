@@ -219,7 +219,10 @@ input ~ label::after { width: 100%; }
 input:checked ~ label::after { width: 0; }
 input:checked ~ label,
 input:checked ~ i.fa { color: #455D7A; }
-label:hover { cursor: pointer; }
+label:hover {
+  cursor: pointer;
+  color: #F95959 !important;
+}
 
 label ~ i.fa {
   margin-left: 0.5em;
