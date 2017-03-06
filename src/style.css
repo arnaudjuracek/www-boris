@@ -78,6 +78,12 @@ section.sidebar a {
   text-decoration: none;
 }
 
+section.sidebar hr {
+  border: none;
+  margin: 0;
+  margin-bottom: 1.4em;
+}
+
 section.sidebar article h1 {
   font-size: 3rem;
   line-height: 1.2em;
