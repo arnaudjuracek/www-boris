@@ -35,7 +35,8 @@ function Graph (opts) {
       }
 
       if (!areSame(tmp, nodes)) {
-        nodes = tmp
+        diffRemove(nodes, tmp)
+        diffAdd(nodes, tmp)
         update()
       }
     },
@@ -62,6 +63,27 @@ function Graph (opts) {
   }
 
   return api
+
+  function diffRemove (arr, compare) {
+    for (var i in arr) {
+      var node = arr[i]
+      if (!inArray(compare, node)) arr.splice(i, 1)
+    }
+  }
+
+  function diffAdd (arr, compare) {
+    for (var i in compare) {
+      var node = compare[i]
+      if (!inArray(arr, node)) arr.push(node)
+    }
+  }
+
+  function inArray (arr, node) {
+    for (var i in arr) {
+      if (node.id === arr[i].id) return true
+    }
+    return false
+  }
 
   function findNode (id) {
     for (var i = 0; i< nodes.length; i++) {
