@@ -24,19 +24,27 @@ function Graph (opts) {
     get links () { return links },
     get force () { return force },
 
-    set : function (newNodes) {
+    set : function (arr) {
       var tmp = []
-      for (var i in newNodes) {
-        var node = newNodes[i]
+      for (var i in arr) {
+        var node = arr[i]
         tmp.push({
           id : node.id,
-          raw : node
+          raw : node,
         })
       }
 
       if (!areSame(tmp, nodes)) {
         diffRemove(nodes, tmp)
-        diffAdd(nodes, tmp)
+        var newNodes = diffAdd(nodes, tmp)
+        for (var i in newNodes) {
+          var node = newNodes[i]
+          var pin = findNodeClosestPin(node)
+          node.x = pin ? pin.x : 0
+          node.y = pin ? pin.y : 0
+        }
+
+        nodes = nodes.concat(newNodes)
         update()
       }
     },
@@ -72,10 +80,12 @@ function Graph (opts) {
   }
 
   function diffAdd (arr, compare) {
+    var result = []
     for (var i in compare) {
       var node = compare[i]
-      if (!inArray(arr, node)) arr.push(node)
+      if (!inArray(arr, node)) result.push(node)
     }
+    return result
   }
 
   function inArray (arr, node) {
@@ -94,6 +104,25 @@ function Graph (opts) {
   function findNodeIndex (id) {
     for (var i = 0; i < nodes.length; i++) {
       if (nodes[i].id == id) return i
+    }
+  }
+
+  function findNodeClosestPin (node) {
+    for (var i in nodes) {
+      var n = nodes[i].raw
+      if (n.pinned) {
+        var found
+        Object.keys(n.links).forEach(function (key) {
+          for (var j in n.links[key]) {
+            var link = n.links[key][j]
+            if (link.target === node.id) {
+              found = n
+              break
+            }
+          }
+        })
+        if (found) return findNode(found.id)
+      }
     }
   }
 
