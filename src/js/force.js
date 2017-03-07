@@ -21,6 +21,7 @@ function Force (opts) {
   var simulation = d3.forceSimulation()
       .force('link', d3.forceLink())
       .force('centering', d3.forceCenter(opts.width / 2, opts.height / 2))
+      .force('collision', d3.forceCollide().radius(function (d) { return d.raw.pinned ? 50 : 20 }))
       .on('tick', function () {
         emitter.emit('tick')
       })
@@ -33,7 +34,7 @@ function Force (opts) {
 
 
     reheat : function () {
-      simulation.alpha(1).restart()
+      simulation.alpha(0).alphaTarget(0.5).restart()
     },
 
     update : function (nodes, links) {

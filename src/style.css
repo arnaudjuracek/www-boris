@@ -110,15 +110,8 @@ section.sidebar article .content p {
   line-height: 1.4em;
 }
 
-section.sidebar article footer {
-  font-weight: 300;
-  // position: absolute;
-  // bottom: 50px;
-}
-
-section.sidebar article .tags {
-  margin-top: 1.4em;
-}
+section.sidebar article footer { font-weight: 300; }
+section.sidebar article .tags { margin-top: 1.4em; }
 
 section.sidebar article footer ul {
   list-style: none;
@@ -126,9 +119,7 @@ section.sidebar article footer ul {
   padding: 0;
 }
 
-i.fa ~ span.value {
-  margin-left: 0.5em;
-}
+i.fa ~ span.value { margin-left: 0.5em; }
 
 /* ------------------------------------------------------------------------- */
 
@@ -196,9 +187,7 @@ section.filters ul {
   margin: 0;
 }
 
-section.filters input {
-  display: none;
-}
+section.filters input[type=checkbox] { display: none; }
 
 label {
   position: relative;
