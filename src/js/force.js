@@ -34,7 +34,7 @@ function Force (opts) {
 
 
     reheat : function () {
-      simulation.alpha(0).alphaTarget(0.5).restart()
+      simulation.alphaTarget(0.3).restart()
     },
 
     update : function (nodes, links) {
