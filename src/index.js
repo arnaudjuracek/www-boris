@@ -131,7 +131,6 @@ function createFilter (network, graph, filter) {
   for (var i = 0; i < network.tags.length; i++) {
     var tag = network.tags[i]
     if (tag) {
-
       filter.tags.push(tag)
 
       var checkbox = document.createElement('input')

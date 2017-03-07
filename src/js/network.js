@@ -24,7 +24,7 @@ function Network (nodes, opts) {
 
     get nodes () { return nodes },
     get links () { return analyseLinks(nodes) },
-    get tags () { return analyseTags(nodes) },
+    get tags () { return analyseTags(nodes).sort() },
     get timeRange () { return analyseTimeline(nodes) },
 
     subset : function (filter) {
