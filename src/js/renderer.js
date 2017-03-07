@@ -5,10 +5,7 @@ var Emitter = require('tiny-emitter')
 var Force   = require('./force.js')
 
 var defaultOpts = {
-  width: window.innerWidth,
-  height: window.innerHeight,
   scale: [0.1, 8],
-  nodeWidth: 300
 }
 
 function Renderer (graph, opts) {
@@ -16,13 +13,12 @@ function Renderer (graph, opts) {
   opts = Object.assign({}, defaultOpts, opts || {})
 
   var svg = d3.select('main').append('svg')
-                                .attr('width', opts.width)
-                                .attr('height', opts.height)
                                 .call(
                                       d3.zoom()
                                         .scaleExtent(opts.scale)
                                         .on('zoom', zoomHandler)
                                       )
+
   var ctx = svg.append('g').attr('class', 'container')
   var linkContainer = ctx.append('g').attr('class', 'links')
   var nodeContainer = ctx.append('g').attr('class', 'nodes')

@@ -6,7 +6,6 @@ var Emitter = require('tiny-emitter')
 var defaultOpts = {
   width: window.innerWidth,
   height: window.innerHeight,
-  scale: [0.1, 8],
   distance: {
     direct: 200,
     indirect: 500,

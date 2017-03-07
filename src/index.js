@@ -14,13 +14,10 @@ gs.on('error', (err) => console.error(err))
 
 gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
   if (!err) {
-
     var app = (function() {
       var el = document.getElementById('app')
       var rect = el.getBoundingClientRect()
       return {
-        el,
-        rect,
         width: rect.width,
         height: rect.height,
       }
@@ -28,7 +25,7 @@ gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
 
     var network  = Network(gs.cells)
     var graph    = Graph({width: app.width, height: app.height})
-    var renderer = Renderer(graph, {width: app.width, height: app.height})
+    var renderer = Renderer(graph, {})
 
     var filter = {
       time: [0, 0],
