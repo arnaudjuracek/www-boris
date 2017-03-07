@@ -69,7 +69,14 @@ function Sidebar (opts) {
   function parseContent (el, str) {
     if (str) {
       el.style.display = ''
-      el.innerHTML = str
+      el.innerHTML = ''
+
+      var parts = str.split(/\r|\n/)
+      for (var i in parts) {
+        var p = document.createElement('p')
+        p.innerHTML = parts[i]
+        el.appendChild(p)
+      }
     } else el.style.display = 'none'
   }
 
