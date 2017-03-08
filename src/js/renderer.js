@@ -6,6 +6,7 @@ var Force   = require('./force.js')
 
 var defaultOpts = {
   scale: [0.1, 8],
+  decimal: 10,
 }
 
 function Renderer (graph, opts) {
@@ -82,14 +83,14 @@ function Renderer (graph, opts) {
 
   function tickHandler () {
     node.attr('transform', function (d) {
-      return 'translate(' + d.x + ',' + d.y + ')'
+      return 'translate(' + (Math.floor(d.x * opts.decimal) / opts.decimal) + ',' + (Math.floor(d.y * opts.decimal) / opts.decimal) + ')'
     })
 
     link
-      .attr('x1', function (d) { return d.source.x })
-      .attr('y1', function (d) { return d.source.y })
-      .attr('x2', function (d) { return d.target.x })
-      .attr('y2', function (d) { return d.target.y })
+      .attr('x1', function (d) { return (Math.floor(d.source.x * opts.decimal) / opts.decimal) })
+      .attr('y1', function (d) { return (Math.floor(d.source.y * opts.decimal) / opts.decimal) })
+      .attr('x2', function (d) { return (Math.floor(d.target.x * opts.decimal) / opts.decimal) })
+      .attr('y2', function (d) { return (Math.floor(d.target.y * opts.decimal) / opts.decimal) })
 
     emitter.emit('tick')
   }
