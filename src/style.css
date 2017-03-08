@@ -63,14 +63,41 @@ section.sidebar {
 }
 
 section.sidebar article {
+  position: absolute;
   padding: 50px;
   opacity: 0;
   transform: translateY(2rem);
 }
 
+section.sidebar article.welcome { transform: translateX(-2rem) }
+section.sidebar article.slide-left { transform: translateX(2rem) }
+
+section.sidebar a.back {
+  z-index: 1;
+  position: absolute;
+  font-size: 2rem;
+  left: 15px;
+  top: 10px;
+  color: #E3E3E3;
+  opacity: 0.3;
+}
+section.sidebar a.back::after { border: none; }
+section.sidebar a.back:hover {
+  color: #F95959;
+  opacity: 1;
+}
+
+section.sidebar article.welcome.show + a.back {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-2rem)
+}
+
+
+
 section.sidebar article.show {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0) translateY(0);
 }
 
 section.sidebar a {
@@ -84,7 +111,7 @@ section.sidebar hr {
   margin-bottom: 1.4em;
 }
 
-section.sidebar article h1 {
+section.sidebar article header h1 {
   font-size: 3rem;
   line-height: 1.2em;
   margin: 0;

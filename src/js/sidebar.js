@@ -12,6 +12,7 @@ function Sidebar (opts) {
 
   var elements = {
     container: opts.container || opts.el,
+    welcome: opts.el.querySelector('article#welcome'),
     title: opts.container.querySelector('h1'),
     time: {
       begin: opts.container.querySelector('time.begin'),
@@ -30,9 +31,13 @@ function Sidebar (opts) {
 
   var api = {
     get el () { return opts.el },
-    get container () { return opts.container },
+    get elements () { return elements },
     on : function (event, callback, context) { emitter.on(event, callback, context) },
     update: function (node) {
+      if (elements.welcome.classList.contains('show')) {
+        elements.welcome.classList.remove('show')
+        elements.container.classList.add('slide-left')
+      }
       if (!pnode || pnode.id !== node.id) {
         elements.container.style.display = ''
         elements.container.classList.remove('show', 'easing-slow')
@@ -40,12 +45,13 @@ function Sidebar (opts) {
         fillWith(node)
         pnode = node
         emitter.emit('update')
-
-        // force restyle
-        // see http://stackoverflow.com/a/31862081
-        window.getComputedStyle(elements.container).opacity;
-        elements.container.classList.add('easing-slow', 'show')
       }
+
+      // force restyle
+      // see http://stackoverflow.com/a/31862081
+      window.getComputedStyle(elements.container).opacity;
+      elements.container.classList.add('easing-slow', 'show')
+      elements.container.classList.remove('slide-left')
     }
   }
 

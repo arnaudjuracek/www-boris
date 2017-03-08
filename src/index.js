@@ -52,16 +52,18 @@ gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
 
     var sidebar = Sidebar({
       el: document.getElementById('sidebar'),
-      container : document.getElementById('card')
+      container: document.getElementById('card'),
     })
-
-    sidebar.container.style.display = 'none'
 
     renderer.on('mouseover', sidebar.update)
 
-    sidebar.on('update', function () {
-      sidebar.container.style.display = ''
-      sidebar.el.querySelector('article.welcome').style.display = 'none'
+    var back = document.getElementById('goBack')
+    back.addEventListener('click', function (e) {
+      e.preventDefault()
+      sidebar.elements.container.classList.remove('show', 'easing-slow')
+
+      window.getComputedStyle(sidebar.elements.welcome).opacity;
+      sidebar.elements.welcome.classList.add('easing-slow', 'show')
     })
   }
 })
