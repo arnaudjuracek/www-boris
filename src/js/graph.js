@@ -39,9 +39,11 @@ function Graph (opts) {
         var newNodes = diffAdd(nodes, tmp)
         for (var i in newNodes) {
           var node = newNodes[i]
-          var pin = findNodeClosestPin(node)
-          node.x = pin ? pin.x : 0
-          node.y = pin ? pin.y : 0
+          if (!node.raw.pinned) {
+            var pin = findNodeClosestPin(node)
+            node.x = pin ? pin.x + (1 - Math.random() * 2) : 0
+            node.y = pin ? pin.y + (1 - Math.random() * 2) : 0
+          }
         }
 
         nodes = nodes.concat(newNodes)
