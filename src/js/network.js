@@ -10,33 +10,55 @@ function Network (nodes, opts) {
   opts = Object.assign({}, defaultOpts, opts || {})
   var emitter = new Emitter()
 
+  // create each node's links object
   for (var i = 0; i < nodes.length; i++) {
     var node = nodes[i]
+    var tmp = []
     Object.keys(node.links).forEach(function (key) {
-      node.links[key] = createLinks(node, key)
+      tmp = tmp.concat(createLinks(node, key))
     })
+    node.links = tmp
   }
 
+  // create each node's targetOf object
+  for (var i = 0; i < nodes.length; i++) {
+    var node = nodes[i]
+    node.targetOf = []
+    for (var j = 0; j < nodes.length; j++) {
+      if (i !== j) {
+        var links = nodes[j].links
+        for (var k = 0; k < links.length; k++) {
+          var link = links[k]
+          if (link.target === node.id) {
+            node.targetOf.push(link)
+          }
+        }
+      }
+    }
+  }
 
   var api = {
     on: function (event, callback, context) { emitter.on(event, callback, context) },
     update: function () {},
 
     get nodes () { return nodes },
-    get links () { return analyseLinks(nodes) },
     get tags () { return analyseTags(nodes).sort() },
     get timeRange () { return analyseTimeline(nodes) },
 
     subset : function (filter) {
       filter = filter || function (n) { return n }
 
-      var subset = []
+      var
+        include = [],
+        exclude = []
+
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i]
-        if (filter(node)) subset.push(node)
+        if (filter(node)) include.push(node)
+        else exclude.push(node)
       }
 
-      return subset
+      return [include, exclude]
     }
   }
 
@@ -82,7 +104,8 @@ function Network (nodes, opts) {
         if (link && link - opts.rowOffset !== id) {
           links.push({
             source: id,
-            target: link - opts.rowOffset
+            target: link - opts.rowOffset,
+            type: linkType,
           })
         }
       }

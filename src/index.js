@@ -3,11 +3,24 @@
 var GSheet   = require('./js/gsheet.js')
 var Network  = require('./js/network.js')
 var Graph    = require('./js/graph.js')
+var Filter   = require('./js/filter.js')
 var Renderer = require('./js/renderer.js')
 var Sidebar  = require('./js/sidebar.js')
 
 var noUiSlider = require('nouislider')
 
+var network, graph, renderer
+
+var filter = Filter()
+
+// -------------------------------------------------------------------------
+
+var sidebar = Sidebar({
+  el: document.getElementById('sidebar'),
+  container: document.getElementById('card'),
+})
+
+// -------------------------------------------------------------------------
 
 var gs = GSheet({})
 gs.on('error', (err) => console.error(err))
@@ -23,37 +36,13 @@ gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
       }
     })()
 
-    var network  = Network(gs.cells)
-    var graph    = Graph({width: app.width, height: app.height})
-    var renderer = Renderer(graph, {})
+    network  = Network(gs.cells)
+    graph    = Graph({width: app.width, height: app.height})
+    renderer = Renderer(graph, {})
 
-    var filter = {
-      time: [0, 0],
-      tags: [],
-      exec: function(node) {
-        return node.pinned || (inTime(node, this.time) && matchAnyTags(node, this.tags))
-
-        function inTime (node, range) {
-          return node.begin.raw >= range[0] && node.begin.raw <= range[1]
-        }
-
-        function matchAnyTags (node, tags) {
-          for (var i = 0; i < node.tags.length; i++) {
-            var tag = node.tags[i]
-            if (tags.indexOf(tag) > -1) return true
-          }
-          return false
-        }
-      }
-    }
-
-    createFilter(network, graph, filter)
-    createSlider(network, graph, filter)
-
-    var sidebar = Sidebar({
-      el: document.getElementById('sidebar'),
-      container: document.getElementById('card'),
-    })
+    createFilter()
+    createSlider()
+    createOutsideNodesFilter()
 
     renderer.on('mouseover', sidebar.update)
 
@@ -70,7 +59,7 @@ gs.query('16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4', function (err, resp) {
 
 // -------------------------------------------------------------------------
 
-function createSlider (network, graph, filter) {
+function createSlider () {
   var slider = document.getElementById('slider')
   var timeRange = network.timeRange
 
@@ -120,13 +109,15 @@ function createSlider (network, graph, filter) {
 
   slider.noUiSlider.on('update', function(values, handle, unencoded) {
     filter.time = unencoded
-    var sub = network.subset(filter.exec.bind(filter))
-    graph.set(sub)
+    var sub = network.subset(filter.exec)
+    var nodes = filter.dealWithOutsideNodes(sub, renderer)
+    graph.set(nodes)
+    renderer.updateOutsideClass(nodes)
   })
 
 }
 
-function createFilter (network, graph, filter) {
+function createFilter () {
   var tagsFilter = document.getElementById('tags')
   var tagsContainer = tagsFilter.querySelector('ul')
 
@@ -149,7 +140,7 @@ function createFilter (network, graph, filter) {
 
       // <i class="fa fa-tags" title="valeur">
       var fa = document.createElement('i')
-      fa.classList.add('fa', 'fa-tags')
+      fa.classList.add('fa', 'fa-tag')
 
       var li = document.createElement('li')
       li.appendChild(checkbox)
@@ -167,7 +158,25 @@ function createFilter (network, graph, filter) {
       if (tag.checked) filter.tags.push(tag.value)
     }
 
-    var sub = network.subset(filter.exec.bind(filter))
-    graph.set(sub)
+    var sub = network.subset(filter.exec)
+    var nodes = filter.dealWithOutsideNodes(sub, renderer)
+    graph.set(nodes)
+    renderer.updateOutsideClass(nodes)
+  })
+}
+
+function createOutsideNodesFilter () {
+  var showOutsideNodesFilter = document.getElementById('showOutsideNodes')
+  filter.showOutsideNodes = showOutsideNodesFilter.checked
+
+  showOutsideNodesFilter.addEventListener('change', function(e) {
+    filter.showOutsideNodes = this.checked
+
+    var sub = network.subset(filter.exec)
+    var nodes = filter.dealWithOutsideNodes(sub, renderer)
+    // FIXME : find why two graph.set are needed here
+    graph.set(nodes)
+    graph.set(nodes)
+    renderer.updateOutsideClass(nodes)
   })
 }

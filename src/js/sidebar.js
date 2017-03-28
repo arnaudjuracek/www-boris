@@ -121,7 +121,7 @@ function Sidebar (opts) {
         var tag = tags[i]
 
         var fa = document.createElement('i')
-        fa.classList.add('fa', 'fa-tags')
+        fa.classList.add('fa', 'fa-tag')
 
         var value = document.createElement('span')
         value.classList.add('value')

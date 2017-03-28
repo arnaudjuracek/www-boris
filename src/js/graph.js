@@ -40,9 +40,9 @@ function Graph (opts) {
         for (var i in newNodes) {
           var node = newNodes[i]
           if (!node.raw.pinned) {
-            var pin = findNodeClosestPin(node)
-            node.x = pin ? pin.x + (1 - Math.random() * 2) : 0
-            node.y = pin ? pin.y + (1 - Math.random() * 2) : 0
+            var nearest = findNearestNode(node)
+            node.x = nearest ? nearest.x + (1 - Math.random() * 2) : 0
+            node.y = nearest ? nearest.y + (1 - Math.random() * 2) : 0
           }
         }
 
@@ -109,43 +109,41 @@ function Graph (opts) {
     }
   }
 
-  function findNodeClosestPin (node) {
+  function findNearestNode (node) {
     for (var i in nodes) {
       var n = nodes[i].raw
       if (n.pinned) {
         var found
-        Object.keys(n.links).forEach(function (key) {
-          for (var j in n.links[key]) {
-            var link = n.links[key][j]
-            if (link.target === node.id) {
-              found = n
-              break
-            }
+        for (var j in n.links) {
+          var link = n.links[j]
+          if (link.target === node.id) {
+            found = n
+            break
           }
-        })
+        }
         if (found) return findNode(found.id)
       }
     }
+
+    // warning : potential nullPointerException
+    return findNode(node.raw.links[0].target)
   }
 
   function refreshLinks () {
     links = []
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i].raw
-
-      Object.keys(node.links).forEach(function (key) {
-        for (var j = 0; j < node.links[key].length; j++) {
-          var target = findNode(node.links[key][j].target)
-          if (target) {
-            links.push({
-              source : node.id,
-              target : target,
-              type   : key,
-            })
-          }
+      for (var j = 0; j < node.links.length; j++) {
+        var link = node.links[j]
+        var target = findNode(link.target)
+        if (target) {
+          links.push({
+            source : node.id,
+            target : target,
+            type   : link.type,
+          })
         }
-      })
-
+      }
     }
   }
 

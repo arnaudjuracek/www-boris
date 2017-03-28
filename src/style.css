@@ -39,6 +39,12 @@ a::after {
 
 a:hover::after { width: 100%; }
 
+hr {
+  border: none;
+  margin: 0;
+  margin-bottom: 1.4em;
+}
+
 ::-moz-selection {
   color: #E3E3E3;
   background: #F95959;
@@ -104,12 +110,6 @@ section.sidebar a {
   text-decoration: none;
 }
 
-section.sidebar hr {
-  border: none;
-  margin: 0;
-  margin-bottom: 1.4em;
-}
-
 section.sidebar article header h1 {
   font-size: 3rem;
   line-height: 1.2em;
@@ -169,6 +169,8 @@ main .link {
   stroke-width: 5px;
 }
 
+main .link.outside { opacity: 0.1; }
+
 main .link.direct { stroke: #455D7A; }
 main .link.indirect {
   stroke: rgba(0, 0, 0, 0.2);
@@ -181,6 +183,8 @@ main .link.misc {
 }
 
 main .node { font-size: 2rem; }
+main .node.outside { opacity: 0.3; }
+main .node.outside:hover { opacity: 0.6; }
 main .node circle {
   stroke-width: 0px;
   stroke: #455D7A;
@@ -198,7 +202,6 @@ main .node.pinned circle,
 main .node.pinned text { fill: #F95959; }
 main .node.pinned circle,
 main .node circle:hover { stroke: #F95959; }
-
 
 /* ------------------------------------------------------------------------- */
 

@@ -33,6 +33,18 @@ function Renderer (graph, opts) {
   var api = {
     on : function (event, callback, context) { emitter.on(event, callback, context) },
     update : function () { update() },
+
+    addClass : function (id, className) { setClass(id, className, true) },
+    removeClass : function (id, className) { setClass(id, className, false) },
+
+    addOutsideClass : function (node) { setOutsideClass(node, true) },
+    removeOutsideClass : function (node) { setOutsideClass(node, false) },
+    updateOutsideClass : function (nodes) {
+      for (var i = 0; i < nodes.length; i++) {
+        var node = nodes[i]
+        setOutsideClass(nodes[i], node.isOutside)
+      }
+    }
   }
 
   return api
@@ -44,7 +56,8 @@ function Renderer (graph, opts) {
     node.exit().remove()
 
     var nodeEnter = node.enter().append('g')
-      .attr('class', function (d) { return `node ${d.raw.pinned ? 'pinned' : ''} easing` })
+      .attr('id', function (d) { return `node-${d.id}` })
+      .attr('class', function (d) { return `node ${d.raw.pinned ? 'pinned ' : ''} easing` })
       .call(
             d3.drag()
             .subject(dragsubject)
@@ -71,14 +84,32 @@ function Renderer (graph, opts) {
 
     link = linkContainer.selectAll('line')
       .data(graph.links, function (d) {
-        return d.source.id + '-' + d.target.id
+        return `${d.type}-${d.source.id}-${d.target.id}`
       })
 
     link.enter().append('line')
-      .attr('id', function (d) { return d.source.id + '-' + d.target.id })
-      .attr('class', function (d) { return `link ${d.type} easing` })
+      .attr('id', function (d) { return `${d.type}-${d.source.id}-${d.target.id}` })
+      .attr('class', function (d) {
+        return `link ${d.type} easing`
+      })
 
     link.exit().remove()
+  }
+
+  function setClass (id, className, value) {
+    ctx.select(`#${id}`).classed(className, value)
+  }
+
+  function setOutsideClass (node, value) {
+    setClass(`node-${node.id}`, 'outside', value)
+    for (var i = 0; i < node.links.length; i++) {
+      var link = node.links[i]
+      setClass(`${link.type}-${link.source}-${link.target}`, 'outside', value)
+      for (var j = 0; j < node.targetOf.length; j++) {
+        link = node.targetOf[j]
+        setClass(`${link.type}-${link.source}-${link.target}`, 'outside', value)
+      }
+    }
   }
 
   function tickHandler () {
