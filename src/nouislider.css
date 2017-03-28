@@ -203,11 +203,15 @@
   width: 2px;
   height: 5px;
 }
+.noUi-marker-horizontal.noUi-marker-normal {
+  width: 2px;
+  height: 2px;
+}
 .noUi-marker-horizontal.noUi-marker-sub {
   height: 10px;
 }
 .noUi-marker-horizontal.noUi-marker-large {
-  height: 15px;
+  height: 10px;
 }
 /* Vertical layout;
  *
@@ -242,6 +246,7 @@
   text-align: center;
   font-size: 1rem;
 }
+
 .noUi-horizontal .noUi-tooltip {
   -webkit-transform: translate(-50%, 0);
   transform: translate(-50%, 0);
