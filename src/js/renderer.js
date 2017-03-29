@@ -25,6 +25,7 @@ function Renderer (graph, opts) {
   var nodeContainer = ctx.append('g').attr('class', 'nodes')
 
   var node, link
+  var dragging = false
 
   update()
   graph.on('update', update)
@@ -60,10 +61,10 @@ function Renderer (graph, opts) {
       .attr('class', function (d) { return `node ${d.raw.pinned ? 'pinned ' : ''} easing` })
       .call(
             d3.drag()
-            .subject(dragsubject)
-            .on('start', dragstarted)
+            .subject(dragSubject)
+            .on('start', dragStarted)
             .on('drag', dragged)
-            .on('end', dragended))
+            .on('end', dragEnded))
 
     nodeEnter.append('svg:circle')
       .attr('r', function (d) { return d.raw.pinned ? 20 : 10 })
@@ -131,11 +132,12 @@ function Renderer (graph, opts) {
     emitter.emit('zoom', d3.event.transform)
   }
 
-  function dragsubject() {
+  function dragSubject() {
     return graph.force.simulation.find(d3.event.x, d3.event.y)
   }
 
-  function dragstarted () {
+  function dragStarted () {
+    dragging = true
     if (!d3.event.active) graph.force.simulation.alphaTarget(0.3).restart();
     d3.event.subject.fx = d3.event.subject.x;
     d3.event.subject.fy = d3.event.subject.y;
@@ -146,14 +148,32 @@ function Renderer (graph, opts) {
     d3.event.subject.fy = d3.event.y;
   }
 
-  function dragended() {
+  function dragEnded() {
+    dragging = false
     if (!d3.event.active) graph.force.simulation.alphaTarget(0);
     d3.event.subject.fx = null;
     d3.event.subject.fy = null;
+    link.attr('opacity', 1)
   }
 
-  function hoverStart (d) { emitter.emit('mouseover', d.raw) }
-  function hoverEnd (d) { emitter.emit('mouseout') }
+  function hoverStart (d) {
+    if (!dragging) {
+      // using attr('opacity') instead of style('opacity')
+      // to prevent conflict with css .link.outside
+      link.attr('opacity', function (l) {
+        return (d.raw.id === l.source.id || d.raw.id === l.target.id) ? 1 : 0.1
+      })
+      emitter.emit('mouseover', d.raw)
+    }
+  }
+
+  function hoverEnd (d) {
+    if (!dragging) {
+      link.attr('opacity', 1)
+      emitter.emit('mouseout')
+    }
+  }
+
 
 }
 
