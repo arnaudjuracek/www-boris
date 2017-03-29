@@ -20,6 +20,7 @@ function Force (opts) {
 
   var simulation = d3.forceSimulation()
       .force('link', d3.forceLink())
+      .force('manybody', d3.forceManyBody().strength(-100))
       .force('centering', d3.forceCenter(opts.width / 2, opts.height / 2))
       .force('collision', d3.forceCollide().radius(function (d) { return d.raw.pinned ? 50 : 20 }))
       .on('tick', function () {
