@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>www-boris</title>
+  <meta name="description" content="">
+  <meta name="author" content="Arnaud Juracek <arnaud.juracek@gmail.com> (http://arnaudjuracek.fr)">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section class="sidebar" id="sidebar">
+    <article id="welcome" class="welcome show easing-slow">
+      <header>
+        <h1>Outil de visualisation des pratiques, des discours, des liens et des positionnements des acteurs</h1>
+        <aside></aside>
+      </header>
+      <div class="content">
+         <p><i>Travail de recherche par Boris Raoult</i></p>
+
+         <p>Un petit texte introductif à l'outil et à l'interface, avec éventuellement des <a href="#">liens</a>, sur plusieurs lignes sans problèmes.</p>
+         <p>Voir sur plusieurs paragraphes.</p>
+      </div>
+      <footer>
+        <div><i class="fa fa-file-excel-o"></i><span class="value"><a href="https://docs.google.com/spreadsheets/d/16LTS9c8EwuhwAyLgnY3WmII2x-hL16FzmOPyNSvGiv4/">base de données</a></span></div>
+        <hr>
+        <div><i class="fa fa-thumbs-o-up"></i><span class="value">conçu et développé par <a href="http://arnaudjuracek.fr/" target="_blank">Arnaud&nbsp;Juracek</a></span></div>
+        <div><i class="fa fa-file-code-o"></i><span class="value"><a href="https://github.com/arnaudjuracek/www-boris">license MIT</a></span></div>
+      </footer>
+    </article>
+
+    <a href="#" class="back" id="goBack"><i class="fa fa-long-arrow-left"></i></a>
+
+    <article id="card">
+      <header>
+        <h1>title</h1>
+        <aside>
+          <time class="begin" datetime="">mm/yyyy</time>&nbsp;&mdash;&nbsp;<time class="end" datetime="">mm/yyyy</time>
+        </aside>
+      </header>
+      <div class="content">
+        <p>interview by Aspen Institute CEO and President, Walter Isaacson with Tesla and SpaceX CEO, Elon Musk, Aspen Institute en lien avec Eric Schmidt, présence de Zuckerberg a cet événement en 2015.</p>
+      </div>
+      <footer>
+        <div class="category">
+          <i class="fa fa-file-o" title="catégorie"></i><span class="value">interview filmée</span>
+        </div>
+        <div class="location">
+          <i class="fa fa-globe" title="lieu"></i><span class="value">Yerba Buena Center for the Arts, San Francisco, USA</span>
+        </div>
+        <div class="source">
+          <i class="fa fa-link" title="source"></i><span class="value"><a href="http://www.vanityfair.com/news/tech/2014/10/elon-musk-artificial-intelligence-fear">vanityfair.com</a></span>
+        </div>
+        <div class="tags">
+          <ul>
+            <li><i class="fa fa-tags" title="valeur"></i><span class="value">marsisme</span></li>
+            <li><i class="fa fa-tags" title="valeur"></i><span class="value">intelligence artificielle</span></li>
+            <li><i class="fa fa-tags" title="valeur"></i><span class="value">vitesse</span></li>
+            <li><i class="fa fa-tags" title="valeur"></i><span class="value">lobbying US</span></li>
+          </ul>
+        </div>
+      </footer>
+    </article>
+  </section>
+
+  <main id="app" class="noselect">
+    <section class="timeline">
+      <div id="slider"></div>
+    </section>
+    <section class="filters">
+      <input type="checkbox" value="_outside" name="showOutsideNodes" id="showOutsideNodes"><label for="showOutsideNodes">transparence</label><i class="fa fa-eye"></i>
+      <hr>
+      <form action="" id="tags"><ul></ul></form>
+    </section>
+  </main>
+  <script src="bundle.js"></script>
+  <script src="https://use.fontawesome.com/ac10354b40.js"></script>
+</body>
+</html>

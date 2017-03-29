@@ -1,0 +1,299 @@
+@import 'nouislider.css';
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700');
+
+/**
+ * http://colorhunt.co/c/66816
+ *
+ * dark : #233142
+ * light : #E3E3E3
+ * blue : #455D7A
+ * red : #F95959
+ */
+
+html { font-size: 62.5%; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #E3E3E3;
+  font-size: 1.6rem;
+  line-height: 1.6em;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+}
+
+a::after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  bottom: -0.125em;
+  min-width: 0;
+  width: 0;
+  border-bottom: 2px solid #F95959;
+}
+
+a:hover::after { width: 100%; }
+
+hr {
+  border: none;
+  margin: 0;
+  margin-bottom: 1.4em;
+}
+
+::-moz-selection {
+  color: #E3E3E3;
+  background: #F95959;
+}
+
+::selection {
+  color: #E3E3E3;
+  background: #F95959;
+}
+
+/* ------------------------------------------------------------------------- */
+
+section.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 40%;
+  height: 100%;
+  background: #233142;
+  color: #E3E3E3;
+  overflow-y: scroll;
+}
+
+section.sidebar article {
+  position: absolute;
+  padding: 50px;
+  opacity: 0;
+  transform: translateY(2rem);
+}
+
+section.sidebar article.welcome { transform: translateX(-2rem) }
+section.sidebar article.slide-left { transform: translateX(2rem) }
+
+section.sidebar a.back {
+  z-index: 2;
+  position: fixed;
+  font-size: 2rem;
+  left: 15px;
+  top: 10px;
+  color: #E3E3E3;
+  opacity: 0.3;
+}
+section.sidebar a.back::after { border: none; }
+section.sidebar a.back:hover {
+  color: #F95959;
+  opacity: 1;
+}
+
+section.sidebar article.welcome.show + a.back {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-2rem)
+}
+
+section.sidebar article.show {
+  z-index: 1;
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+section.sidebar a {
+  color: #F95959;
+  text-decoration: none;
+}
+
+section.sidebar article header h1 {
+  font-size: 3rem;
+  line-height: 1.2em;
+  margin: 0;
+}
+
+section.sidebar article aside {
+  font-weight: 300;
+  font-size: 1.4rem;
+  margin-top: 0.5em;
+  margin-bottom: 2em;
+}
+
+section.sidebar article .content {
+  font-weight: 400;
+  font-size: 1.8rem;
+  border-bottom: 3px solid #E3E3E3;
+  padding-bottom: 1em;
+  margin-bottom: 1.8em;
+}
+
+section.sidebar article .content p {
+  margin-bottom: 1.4em;
+  line-height: 1.4em;
+}
+
+section.sidebar article footer { font-weight: 300; }
+section.sidebar article .tags { margin-top: 1.4em; }
+
+section.sidebar article footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+i.fa ~ span.value { margin-left: 0.5em; }
+
+/* ------------------------------------------------------------------------- */
+
+main {
+  position: fixed;
+  top: 0;
+  left: 40%;
+  right : 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+main svg {
+  width: 100%;
+  height: 100%;
+  cursor: move;
+}
+
+main .link {
+  stroke: rgba(0, 0, 0, 0.5);
+  stroke-width: 5px;
+}
+
+main .link.outside { opacity: 0.1; }
+
+main .link.direct { stroke: #455D7A; }
+main .link.indirect {
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-dasharray: 10;
+}
+main .link.misc {
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-dasharray: 2;
+  stroke-width: 2;
+}
+
+main .node { font-size: 2rem; }
+main .node.outside { opacity: 0.3; }
+main .node.outside:hover { opacity: 0.6; }
+main .node circle {
+  stroke-width: 0px;
+  stroke: #455D7A;
+  fill: #455D7A;
+}
+
+main .node circle:hover {
+  cursor: pointer;
+  stroke-width: 10px;
+}
+
+main .node circle:hover,
+main .node circle:hover ~ text,
+main .node.pinned circle,
+main .node.pinned text { fill: #F95959; }
+main .node.pinned circle,
+main .node circle:hover { stroke: #F95959; }
+
+/* ------------------------------------------------------------------------- */
+
+section.timeline {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  bottom: 40px;
+}
+
+section.filters {
+  position: absolute;
+  top: 50px;
+  right: 30px;
+  text-align: right;
+}
+
+section.filters ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+section.filters input[type=checkbox] { display: none; }
+
+label {
+  cursor: pointer;
+  position: relative;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.2);
+}
+
+label::after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  bottom: 0.45em;
+  min-width: 0;
+  width: 0;
+  border-bottom: 2px solid rgba(0, 0, 0 , 0.2);
+}
+
+input ~ label::after { width: 100%; }
+input:checked ~ label::after,
+input:not(:checked) ~ label:hover::after { width: 0; }
+input:checked ~ label,
+input:checked ~ i.fa { color: #455D7A; }
+input:checked ~ label:hover,
+input:checked ~ label:hover ~ i.fa { color: #F95959 !important; }
+
+label ~ i.fa {
+  margin-left: 0.5em;
+  color: rgba(0, 0, 0 , 0.2);
+}
+
+
+/* ------------------------------------------------------------------------- */
+
+@media only screen and (min-width: 1200px) {
+  section.sidebar { width: 480px; }
+  main { left: 480px; }
+}
+
+
+/* ------------------------------------------------------------------------- */
+
+.easing,
+a, a::after,
+input ~ i.fa,
+label, label::after {
+  -webkit-transition: all 300ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+     -moz-transition: all 300ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+      -ms-transition: all 300ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+       -o-transition: all 300ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+          transition: all 300ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+}
+
+.easing-slow {
+  -webkit-transition: all 500ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+     -moz-transition: all 500ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+      -ms-transition: all 500ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+       -o-transition: all 500ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+          transition: all 500ms cubic-bezier(0.250, 0.100, 0.250, 1.000);
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
